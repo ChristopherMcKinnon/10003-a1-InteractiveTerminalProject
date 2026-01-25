@@ -29,10 +29,10 @@ int playerInput;
 int roomTracker; // Tracks floors with bad interactions
 int badDecisions = 0; // Tracks amount of bad decision for dialogue additives
 
-bool getEvidencePhotograph = false;
-bool getEvidenceCrib = false;
-bool getEvidenceShrine = false;
-bool getEvidenceAll = false;
+bool collectedEvidencePhotograph = false;
+bool collectedEvidenceCrib = false;
+bool collectedEvidenceShrine = false;
+bool collectedEvidenceAll = false;
 
 string errorMessage = "You messed up an input and promptly died, start again";
 string credits = "A game made by Christopher David Alexander Lawrick-McKinnon for a college assignment at Mohawk College. 1/24/2025\n\nPress enter to close:";
@@ -168,13 +168,13 @@ else if (playerInput == 2) // Open the door slowly
 else if (playerInput == 3) // Plant pot (PHOTOGRAPH EVIDENCE)
 {
 
-    getEvidencePhotograph = true;
+    collectedEvidencePhotograph = true;
     Console.WriteLine(photographImg);
     Console.WriteLine(evidencePhotographDialogue);
     Console.ReadLine();
-    if (getEvidencePhotograph && getEvidenceCrib && getEvidenceShrine) // The player collects all three evidence
+    if (collectedEvidencePhotograph && collectedEvidenceCrib && collectedEvidenceShrine) // The player collects all three evidence
     {
-        getEvidenceAll = true; // Mostly set for bug fixing
+        collectedEvidenceAll = true; // Mostly set for bug fixing
         Console.WriteLine(allEvidenceDialogue);
         Console.ReadLine();
     }
@@ -205,13 +205,13 @@ else if (playerInput == 2) // Open the door slowly
 }
 else if (playerInput == 3) // Plant pot (PHOTOGRAPH EVIDENCE) (Alt route)
 {
-    getEvidencePhotograph = true;
+    collectedEvidencePhotograph = true;
     Console.WriteLine(photographImg);
     Console.WriteLine(evidencePhotographDialogue);
     Console.ReadLine();
-    if (getEvidencePhotograph && getEvidenceCrib && getEvidenceShrine) // The player collects all three evidence
+    if (collectedEvidencePhotograph && collectedEvidenceCrib && collectedEvidenceShrine) // The player collects all three evidence
     {
-        getEvidenceAll = true;
+        collectedEvidenceAll = true;
         Console.WriteLine(allEvidenceDialogue);
         Console.ReadLine();
     }
@@ -245,7 +245,7 @@ else if (playerInput == 3) // Bedroom
 }
 else if (playerInput == 4) // Leave
 {
-    if (getEvidencePhotograph && getEvidenceCrib && getEvidenceShrine) // The player leaves with all three evidence.
+    if (collectedEvidencePhotograph && collectedEvidenceCrib && collectedEvidenceShrine) // The player leaves with all three evidence.
     {
         goto EndingRemorse;
     }
@@ -266,7 +266,7 @@ else
 Basement:;
 
 Console.WriteLine(basementStairsImg);
-if (getEvidencePhotograph) // More context to the scene if the player has found the photograph
+if (collectedEvidencePhotograph) // More context to the scene if the player has found the photograph
 {
 
     scene4Dialogue = $"Pointing your flashlight down the basement stairs you find its reflection in the gas pipes that line its barren walls. You tread down carefully and quietly.\nThe basement was clearly more of a workshop to someone, fitted with metal shelves, a sink, lathe, and a toolbench. Everything is empty besides some pen blanks however, and hasn't been used in a long time.\nTo your left lies a small room with flickering light emanating from within.\nPeeking around the corner to your right you see another doorway at the back of the room, the same one from the photograph you found outside..\n\n(1) Go left\n(2) Go right\n(3) Go back";
@@ -281,14 +281,14 @@ if (playerInput == 1) // Go left
 }
 else if (playerInput == 2) // Go right (SHRINE EVIDENCE)
 {
-    getEvidenceShrine = true;
+    collectedEvidenceShrine = true;
     Console.WriteLine(evidenceShrineDialoguePre);
     Console.ReadLine();
     Console.WriteLine(evidenceShrineDialogue);
     Console.ReadLine();
-    if (getEvidencePhotograph && getEvidenceCrib && getEvidenceShrine) // The player collects all three evidence
+    if (collectedEvidencePhotograph && collectedEvidenceCrib && collectedEvidenceShrine) // The player collects all three evidence
     {
-        getEvidenceAll = true;
+        collectedEvidenceAll = true;
         Console.WriteLine(allEvidenceDialogue);
         Console.ReadLine();
     }
@@ -336,7 +336,7 @@ playerInput = int.Parse(Console.ReadLine());
 
 if (playerInput == 1) // Knock on the door with all evidence
 {
-    if (getEvidencePhotograph && getEvidenceCrib && getEvidenceShrine)
+    if (collectedEvidencePhotograph && collectedEvidenceCrib && collectedEvidenceShrine)
     {
         goto EndingSolitude;
     }
@@ -388,7 +388,7 @@ playerInput = int.Parse(Console.ReadLine());
 
 if (playerInput == 1) // Check the closet
 {
-    if (getEvidenceAll)
+    if (collectedEvidenceAll)
     {
         Console.WriteLine("Theres nothing here anymore.\n\nPress enter to continue:");
         Console.ReadLine();
@@ -411,12 +411,12 @@ else if (playerInput == 2) // Check under the bed
 }
 else if (playerInput == 3) // Look inside the crib (CRIB EVIDENCE)
 {
-    getEvidenceCrib = true;
+    collectedEvidenceCrib = true;
     Console.WriteLine(evidenceCribDialogue);
     Console.ReadLine();
-    if (getEvidencePhotograph && getEvidenceCrib && getEvidenceShrine) // The player collects all three evidence
+    if (collectedEvidencePhotograph && collectedEvidenceCrib && collectedEvidenceShrine) // The player collects all three evidence
     {
-        getEvidenceAll = true;
+        collectedEvidenceAll = true;
         Console.WriteLine(allEvidenceDialogue);
         Console.ReadLine();
     }
@@ -493,23 +493,23 @@ goto Credits;
 
 // Bad decision handler
 BadDecisionsHandler:;
-if (badDecisions == 1 && !getEvidenceAll) // Handle Dialogue
+if (badDecisions == 1 && !collectedEvidenceAll) // Handle Dialogue
 {
     currentBadDecisionDialogue = badDecision1Dialogue;
 }
-else if (badDecisions == 2 && !getEvidenceAll) {
+else if (badDecisions == 2 && !collectedEvidenceAll) {
     currentBadDecisionDialogue = badDecision2Dialogue;
 }
-else if (badDecisions == 3 && !getEvidenceAll) {
+else if (badDecisions == 3 && !collectedEvidenceAll) {
     currentBadDecisionDialogue = badDecision3Dialogue;
 }
-else if (badDecisions == 4 && !getEvidenceAll) {
+else if (badDecisions == 4 && !collectedEvidenceAll) {
     currentBadDecisionDialogue = badDecision4Dialogue;
 }
-else if (badDecisions >= 5 && !getEvidenceAll) {
+else if (badDecisions >= 5 && !collectedEvidenceAll) {
     goto EndingStomach;
 }
-else if (getEvidenceAll)
+else if (collectedEvidenceAll)
 {
     currentBadDecisionDialogue = noBadDecisionsLeftDialogue;
 }
