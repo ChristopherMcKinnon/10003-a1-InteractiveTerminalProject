@@ -34,7 +34,7 @@ string evidenceShrineDialogue = "A set of candles greet your cool face. A photog
 string allEvidenceDialogue = "A weight seems to have been lifted from the house, you can leave safely now.\n\nPress enter to continue:";
 
 // Ending Dialogue)
-string ending1Dialogue = "You took too long.\n\nA flurry of footsteps and groaning can be heard.";
+string ending1Dialogue = "You took too long.\n\nA flurry of footsteps and groaning can be heard.\n\nPress enter to continue:";
 string ending1Dialogue2 = "Something rushes to you from another room in the house in mere seconds.\nYour gun and flashlight aren't enough to calm your nerves at this point.\nAs it turns the corner, your last thoughts consist only of how suprisingly hideous the thing before you truly is.\nENDING 1: STOMACH\n\nPress enter to continue:";
 
 string ending2Dialogue = "You call in the report as false and head back to the station.\nDespite normally refraining from guilt, your gut turns as you drive away from the house.\nENDING 2: REPENTANCE\n\nPress enter to continue:";
@@ -355,7 +355,18 @@ playerInput = int.Parse(Console.ReadLine());
 
 if (playerInput == 1) // Check the closet
 {
-    goto EndingCloset;
+    if (getEvidenceAll)
+    {
+        Console.WriteLine("Theres nothing here anymore.\n\nPress enter to continue:");
+        Console.WriteLine();
+        // Bad decision handler requires the dialogue to be played again here
+        Console.WriteLine("The room is cold. A thick set of blinds covers the window. Moon and stars hang from the ceiling. A baby's room. Shifting your flashlight to the half-open closet door, shadows seem to slink around the beam of light. Is it the headache?\n(1) Check the closet\n(2) Check under the bed\n(3) Look inside the crib\n(4) Go back");
+        goto Bedroom;
+    }
+    else
+    {
+        goto EndingCloset;
+    }
 }
 else if (playerInput == 2) // Check under the bed
 {
