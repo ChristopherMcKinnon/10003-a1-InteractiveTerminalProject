@@ -51,8 +51,7 @@ string scene2_1Dialogue = "You call the intruder to come out unarmed. No respons
 string scene2_1_1Dialogue = "You kick open the door breaking the silence once again.\n\nPress enter to continue:";
 string scene3Dialogue = "Testing the door you find that it is unlocked. You slowly creak the handle attempting to make the least possible noise, pointing your flashlight and gun. Press enter to continue:";
 string scene3Dialogue2 = "The light switches don't seem to function. You are greeted with a dark hallway, and basement stairs to your right. Several closed doors line the hallway in front of you.\n(1) Search the basement\n(2) Search the bathroom\n(3) Search the bedroom\n(4) Leave";
-string scene4DialoguePre = "";
-string scene4Dialogue = $"Pointing your flashlight down the basement stairs you find its reflection in the gas pipes that line its barren walls. You tread down carefully and quietly.\nThe basement was clearly more of a workshop to someone, fitted with metal shelves, a sink, lathe, and a toolbench. Everything is empty besides some pen blanks however, and hasn't been used in a long time.\nTo your left lies a small room with flickering light emanating from within.\nPeeking around the corner to your right you see another doorway at the back of the room.\n{scene4DialoguePre}\n(1) Go left\n(2) Go right\n(3) Go back";
+string scene4Dialogue = $"Pointing your flashlight down the basement stairs you find its reflection in the gas pipes that line its barren walls. You tread down carefully and quietly.\nThe basement was clearly more of a workshop to someone, fitted with metal shelves, a sink, lathe, and a toolbench. Everything is empty besides some pen blanks however, and hasn't been used in a long time.\nTo your left lies a small room with flickering light emanating from within.\nPeeking around the corner to your right you see another doorway at the back of the room.\n(1) Go left\n(2) Go right\n(3) Go back";
 string scene4_1Dialogue = "Turning the corner to your left you encounter a small, unmaintained sauna room. A bad smell reeks from the unstable boxes this room was improperly used to hold.\n(1) Investigate the boxes further\n(2) Go back";
 string scene4_1_1Dialogue = "As soon as you step into the room you trip slightly on a protruding mop. Reaching your hands out you push over a stack of cardboard boxes. They were Christmas decorations. When the ornaments hit the floor and broke, a deep groaning could be heard from a room upstairs. You back out of the room.\n\nPress enter to continue:";
 string scene5Dialogue = "The door is locked. This is likely the bathroom that the caller was locked in.\n(1) Knock on the door\n(2) Go back";
@@ -90,10 +89,10 @@ Console.ReadLine();
 Console.WriteLine(scene1Dialogue);
 playerInput = int.Parse(Console.ReadLine());
 
-if (playerInput == 1)
+if (playerInput == 1) // Search the house perimeter
 {
     goto HousePerimeter;
-} else if (playerInput == 2) 
+} else if (playerInput == 2) // Go to house entrance
 {
     goto HouseEntrance;
 }
@@ -108,11 +107,11 @@ HousePerimeter:;
 Console.WriteLine(scene1_1Dialogue);
 playerInput = int.Parse(Console.ReadLine());
 
-if (playerInput == 1)
+if (playerInput == 1) // Go to house entrance
 {
     goto HouseEntrance;
 }
-else if (playerInput == 2)
+else if (playerInput == 2) // Leave
 {
     goto EndingRepentance;
 }
@@ -129,7 +128,6 @@ playerInput = int.Parse(Console.ReadLine());
 
 if (playerInput == 1) // Call intruder out (BAD)
 {
-    badDecisions += 1;
     goto CallIntruderOut;
 
 }
@@ -150,7 +148,7 @@ else
     goto ProgramEnd;
 }
 
-// Scene 2.1 - Call the intruder to come out ==========================================================================================================
+// Scene 2.1 - Call the intruder to come out (BAD DECISION)==========================================================================================================
 CallIntruderOut:;
 
 Console.WriteLine(scene2_1Dialogue);
@@ -158,7 +156,6 @@ playerInput = int.Parse(Console.ReadLine());
 
 if (playerInput == 1) // Kick open the door (BAD)
 {
-    badDecisions += 1;
     Console.WriteLine(scene2_1_1Dialogue); // Play dialogue before checking bad ending
     if (badDecisions >= 5)
     {
@@ -185,9 +182,8 @@ else
 goto ProgramEnd;
 }
 
-// Scene 2.1.1 - Kick open the door ==========================================================================================================
+// Scene 2.1.1 - Kick open the door (BAD DECISION)==========================================================================================================
 KickOpenDoor:;
-badDecisions += 1;
 
 Console.WriteLine(scene2_1_1Dialogue);
 Console.ReadLine();
@@ -201,15 +197,15 @@ playerInput = int.Parse(Console.ReadLine());
 
 if (playerInput == 1) // Basement
 {
-
+    goto Basement;
 }
 else if (playerInput == 2) // Bathroom
 {
-
+    goto Bathroom;
 }
 else if (playerInput == 3) // Bedroom
 {
-
+    goto BedroomCorridor;
 }
 else if (playerInput == 4) // Leave
 {
@@ -219,7 +215,7 @@ else if (playerInput == 4) // Leave
     }
     else // The player tries to leave without all three evidence
     {
-        Console.WriteLine("You can't leave yet. Not now.\n\n\nPress enter to continue:");
+        Console.WriteLine("You can't leave yet. Not now.\n\nPress enter to continue:");
         Console.ReadLine();
         goto MainFloor;
     }
@@ -229,11 +225,135 @@ else
     goto ProgramEnd;
 }
 
-// Scene ==========================================================================================================
-// Scene ==========================================================================================================
-// Scene ==========================================================================================================
-// Scene ==========================================================================================================
-// Scene ==========================================================================================================
+// Scene 4 - The basement ==========================================================================================================
+Basement:;
+if (getEvidencePhotograph)
+{
+
+    scene4Dialogue = $"Pointing your flashlight down the basement stairs you find its reflection in the gas pipes that line its barren walls. You tread down carefully and quietly.\nThe basement was clearly more of a workshop to someone, fitted with metal shelves, a sink, lathe, and a toolbench. Everything is empty besides some pen blanks however, and hasn't been used in a long time.\nTo your left lies a small room with flickering light emanating from within.\nPeeking around the corner to your right you see another doorway at the back of the room, the same one from the photograph..\n(1) Go left\n(2) Go right\n(3) Go back";
+
+}
+Console.WriteLine(scene4Dialogue);
+playerInput = int.Parse(Console.ReadLine());
+
+if (playerInput == 1) // Go left
+{
+    goto SaunaRoom;
+}
+else if (playerInput == 2) // Go right
+{
+    getEvidenceShrine = true;
+    Console.WriteLine(evidenceShrineDialoguePre);
+    Console.ReadLine();
+    Console.WriteLine(evidenceShrineDialogue);
+    Console.ReadLine();
+    goto Basement;
+}
+else if (playerInput == 3) // Go back
+{
+    goto MainFloor;
+}
+else
+{
+    goto ProgramEnd;
+}
+
+// Scene 4_1 The sauna ==========================================================================================================
+SaunaRoom:;
+Console.WriteLine(scene4_1Dialogue);
+playerInput = int.Parse(Console.ReadLine());
+
+if (playerInput == 1) // Investigate the boxes further (BAD)
+{
+    Console.WriteLine(scene4_1_1Dialogue);
+    Console.ReadLine();
+    goto SaunaRoom;
+}
+else if (playerInput == 2) // Go back
+{
+    goto Basement;
+}
+else
+{
+    goto ProgramEnd;
+}
+// Scene 5 - Bathroom ==========================================================================================================
+Bathroom:;
+Console.WriteLine(scene5Dialogue);
+playerInput = int.Parse(Console.ReadLine());
+
+if (playerInput == 1) // Knock on the door with all evidence
+{
+    if (getEvidencePhotograph && getEvidenceCrib && getEvidenceShrine)
+    {
+        goto EndingSolitude;
+    }
+    else // Knock on the door without all evidence (BAD)
+    {
+        Console.WriteLine(scene5_1Dialogue);
+        Console.ReadLine();
+        goto MainFloor;
+    }
+}
+else if (playerInput == 2) // Go back
+{
+    goto MainFloor;
+}
+else
+{
+    goto ProgramEnd;
+}
+
+
+// Scene 6 - Bedroom corridor ==========================================================================================================
+BedroomCorridor:;
+Console.WriteLine(scene6Dialogue);
+playerInput = int.Parse(Console.ReadLine());
+
+if (playerInput == 1) // Enter the bedroom
+{
+
+}
+else if (playerInput == 2) // Go back
+{
+    goto MainFloor;
+}
+else
+{
+    goto ProgramEnd;
+}
+// Scene 6_1 Bedroom ==========================================================================================================
+Bedroom:;
+Console.WriteLine(scene6_1Dialogue);
+playerInput = int.Parse(Console.ReadLine());
+
+if (playerInput == 1) // Check the closet
+{
+    goto EndingCloset;
+}
+else if (playerInput == 2) // Check under the bed
+{
+    Console.WriteLine(scene6_1_1Dialogue);
+    Console.ReadLine();
+    goto Bedroom;
+}
+else if (playerInput == 3) // Look inside the crib
+{
+    getEvidenceCrib = true;
+    Console.WriteLine(evidenceCribDialogue);
+    Console.ReadLine();
+    goto Bedroom;
+}
+else if (playerInput == 4) // Go back (BAD)
+{
+    Console.WriteLine(scene6_1_2Dialogue);
+    Console.ReadLine();
+    goto MainFloor;
+}
+else
+{
+    goto ProgramEnd;
+}
 // Scene ==========================================================================================================
 // Scene ==========================================================================================================
 // Scene ==========================================================================================================
@@ -269,12 +389,16 @@ goto Credits;
 // Ending 4 - Remorse ==========================================================================================================
 
 EndingRemorse:;
+Console.WriteLine(ending4DialoguePre);
+Console.ReadLine();
 Console.WriteLine(ending4Dialogue);
 Console.ReadLine();
 goto Credits;
 // Ending 5 - Solitude ==========================================================================================================
 
 EndingSolitude:;
+Console.WriteLine(ending5DialoguePre);
+Console.ReadLine();
 Console.WriteLine(ending5Dialogue);
 Console.ReadLine();
 goto Credits;
