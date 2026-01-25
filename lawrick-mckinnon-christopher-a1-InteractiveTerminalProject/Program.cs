@@ -3,94 +3,288 @@ using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-Console.WriteLine("Hello, World!");
+int playerInput;
+int badDecisions = 0;
+
+bool getEvidencePhotograph = false;
+bool getEvidenceCrib = false;
+bool getEvidenceShrine = false;
+
+string errorMessage = "You messed up an input and promptly died, start again";
+string credits = "A game made by Christopher David Alexander Lawrick-McKinnon for a college assignment at Mohawk College. 1/24/2025\nPress enter to close:";
+
+// Setting Dialogue
+
+// Bad Decision Additives
+string badDecision1Dialogue = "Your stomach is UNEASY..";
+string badDecision2Dialogue = "Your stomach is in KNOTS..";
+string badDecision3Dialogue = "Your stomach TWISTS..";
+string badDecision4Dialogue = "You feel like VOMITING..";
+
+// Evidence Dialogues
+string evidencePhotographDialogue = "You holster your gun and awkwardly lower yourself down and lift the plant pot revealing a photograph of a corridor.\nIt's hard to make out, but a figure's face can be seen in a doorframe.\nSomething ill exudes from this image. You probably shouldn't make any noise.\nEVIDENCE COLLECTED\n\nPress enter to continue:";
+string evidenceCribDialogue = "Leaning over the crib, you spot with your flashlight a brand new plushie basking in layers of dust, and well prepared sheets.\nDeep down you know what this means, and the academy tried to train you to avoid any instance with these beings.\nTo leave the house now would only further the cycle. You should have left while you could.\nThe caller should be left here if you can escape, they lured you here after all.\nEVIDENCE COLLECTED\n\nPress enter to continue:";
+string evidenceShrineDialoguePre = "You turn the corner heading to the back of the room. The darkness seems to creep up your spine, but you're trained for this. You turn into the room.\n\nPress enter to continue:";
+string evidenceShrineDialogue = "A set of candles greet your cool face. A photograph with a small stand, and a wooden cross sit atop a small table. Taking a step in and examining the photograph shows an ultrasound of a baby.\nDespite the warmth of the dying candles, the room isn't any less unwelcoming or foreboding. Someone has been here, and spent much time here.\nEVIDENCE COLLECTED\n\nPress enter to continue:";
+
+
+// Ending Dialogue)
+string ending1Dialogue = "You took too long.\n\nA flurry of footsteps and groaning can be heard.";
+string ending1Dialogue2 = "Something rushes to you from another room in the house in mere seconds.\nYour gun and flashlight aren't enough to calm your nerves at this point.\nAs it turns the corner, your last thoughts consist only of how suprisingly hideous the thing before you truly is.\nENDING 1: STOMACH\n\nPress enter to continue:";
+
+string ending2Dialogue = "You call in the report as false and head back to the station.\nDespite normally refraining from guilt, your gut turns as you drive away from the house.\nENDING 2: REPENTANCE\n\nPress enter to continue:";
+string ending3Dialogue = "You walk over to the closet. Your insides are screaming. Looking up with your flashlight renewed the dread you had hoped was unfounded. The raw appearance of the thing was enough to put you into shock and you passed out hitting the floor.\nYou were never found again.\nENDING 3: CLOSET\n\nPress enter to continue:";
+string ending4DialoguePre = $"You're not sympathetic enough to check on the woman locked in the bathroom.\nFinding yourself back in the cruiser parked on the long dirt road, the dashboard reads {DateTime.Now}.\nFatigued, you head back to the station to end your shift.\nAfter arriving back in your bed however, your mind is restless. You try to rack your brain about the sudden guilt you feel, but come to no conclusions. It's then that you see it.\n\nPress enter to continue:";
+string ending4Dialogue = "Hanging loosely in the doorway is a figure you seem to recognize. Your heart jumps, its the figure from the photograph.\nENDING 4: REMORSE\nPress enter to continue";
+
+string ending5DialoguePre = "You knock on the door. Looking to your right down the hall the bedroom still fills you with chills. No response.\n\nPress enter to continue:";
+string ending5Dialogue = "Reassuring the woman of her safety, and that the thing was gone, there was yet no response. Breaching the door, you find that you were still too late. Despite all of your harrowing attempts at rescue, that you might really still have some empathy in this world, there she lay dead in the tub, just to spite you.\nA choice she'd rather have over facing you, let alone that thing she brought into this room.\nAll you can think about at this point is sleeping. Walking out to your car you call in the situation, then heading back to the station to end your shift. Your sleep that night is nothing short of nightmarish, and in the days that followed you submitted your resignation from the police force of Westcrow County.\nENDING 5: SOLITUDE\n\nPress enter to continue:";
+
+
+// Scene Dialogue
+string intro = "You are a new police officer Evan Ross answering a reported break in and Home intrusion in Westcrow County.\nThe station being short on manpower however, has sent you out alone.\nThe caller has locked herself up in a bathroom within the house.\n\nPress enter to continue:";
+string introWarning = "You mustn't waste your time.\n\nCollect 3 pieces of evidence\n\nPress enter to continue:";
+string scene1Dialogue = $"The dashboard reads {DateTime.Now}. \nYou identify the house number and park your police cruiser thirty feet away. \nGetting out of the car you notice the air is still, and a small pain forming near the back of your neck.\n(1) Search the perimeter of the house\n(2) Walk to the door";
+string scene1_1Dialogue = "With your flashlight on you walk on the unstable path surrounding the house.\nYou spot no points of entry or open windows. The house is quiet.\n(1) Walk to the front door\n(2) Leave";
+string scene2Dialogue = "You walk up the front steps of the weathered one-story house.\nSomething white sticks out underneath the plant pot by your feet.\nYour gun and flashlight are at the ready.\n(1) Call the intruder to come out\n(2) Open the door slowly\n(3) Look under the plant pot\n\nPress enter to continue:";
+string scene2_1Dialogue = "You call the intruder to come out unarmed. No response.\n(1) Kick open the door\n(2) Open the door slowly\n(3) Look under the plant pot";
+string scene2_1_1Dialogue = "You kick open the door breaking the silence once again.\n\nPress enter to continue:";
+string scene3Dialogue = "Testing the door you find that it is unlocked. You slowly creak the handle attempting to make the least possible noise, pointing your flashlight and gun. Press enter to continue:";
+string scene3Dialogue2 = "The light switches don't seem to function. You are greeted with a dark hallway, and basement stairs to your right. Several closed doors line the hallway in front of you.\n(1) Search the basement\n(2) Search the bathroom\n(3) Search the bedroom\n(4) Leave";
+string scene4DialoguePre = "";
+string scene4Dialogue = $"Pointing your flashlight down the basement stairs you find its reflection in the gas pipes that line its barren walls. You tread down carefully and quietly.\nThe basement was clearly more of a workshop to someone, fitted with metal shelves, a sink, lathe, and a toolbench. Everything is empty besides some pen blanks however, and hasn't been used in a long time.\nTo your left lies a small room with flickering light emanating from within.\nPeeking around the corner to your right you see another doorway at the back of the room.\n{scene4DialoguePre}\n(1) Go left\n(2) Go right\n(3) Go back";
+string scene4_1Dialogue = "Turning the corner to your left you encounter a small, unmaintained sauna room. A bad smell reeks from the unstable boxes this room was improperly used to hold.\n(1) Investigate the boxes further\n(2) Go back";
+string scene4_1_1Dialogue = "As soon as you step into the room you trip slightly on a protruding mop. Reaching your hands out you push over a stack of cardboard boxes. They were Christmas decorations. When the ornaments hit the floor and broke, a deep groaning could be heard from a room upstairs. You back out of the room.\n\nPress enter to continue:";
+string scene5Dialogue = "The door is locked. This is likely the bathroom that the caller was locked in.\n(1) Knock on the door\n(2) Go back";
+string scene5_1Dialogue = "You knock heavily on the door, asking the victim if they are safe. No response.\n\nPress enter to continue:";
+string scene6Dialogue = "A FEELING OF IMPENDING DREAD BEATS YOUR CHEST...\nYou can feel you will regret going here.\n(1) Enter the bedroom\n(2) Go back";
+string scene6_1Dialogue = "The room is cold. A thick set of blinds covers the window. Moon and stars hang from the ceiling. A babies room. Shifting your flashlight to the half-open closet door, shadows seem to slink around the beam of light. Is it the headache?\n(1) Check the closet\n(2) Check under the bed\n(3) Look inside the crib\n(4) Go back";
+string scene6_1_1Dialogue = "Collapsing down swiftly, you peer underneath the bed. Nothing notable but some cobwebs and packed away boxes of diapers.\nPress enter to continue";
+string scene6_1_2Dialogue = "The wind begins to howl outside as you leave the room. There isn't much time left.\nPress enter to continue";
 
 
 
 
-/* Note 
- 
- I was not allowed to use loops, classes, functions, lists, string attributes (e.g. length, split)
- 
- 
- */
 
 
 
-bool flag1 = false;
-bool flag2 = false;
-bool flag3 = false;
-bool flag4 = false;
 
 
-string rule1 = "Rule 1: Create a strong password";
-string rule2 = "Rule 2: Create a password containing a common fruit";
-string rule3 = "Rule 3: There must be no roman numerals in your name";
-string rule4 = "Rule 4: Create a password containing a common fruit";
 
-// Introduction
 
-Console.WriteLine("You are a penetration tester trying to find the single-best password a person can have.");
 
-// Challenge 1
 
-// Print challenge
-Console.WriteLine(rule1);
-// Get player input
-string playerInput = Console.ReadLine();
 
-Console.WriteLine($"Your password: {playerInput}");
 
-Console.WriteLine("Challenge 1 completed.");
+// Scene Setup
 
-flag1 = true;
+// Introduction ==========================================================================================================
 
-// Challenge 2
-if (flag1 == true)
+Console.WriteLine(intro);
+Console.ReadLine();
+Console.WriteLine(introWarning);
+Console.ReadLine();
+
+// Scene 1 - Out of the cruiser ==========================================================================================================
+
+Console.WriteLine(scene1Dialogue);
+playerInput = int.Parse(Console.ReadLine());
+
+if (playerInput == 1)
 {
-    // Print challenge
-    Console.WriteLine(rule1);
-    Console.WriteLine(rule2);
-    // Get player input
-    playerInput = Console.ReadLine();
-    Console.WriteLine($"Your password: {playerInput}");
-
-    // Check against current rules (2)
-    if (playerInput.Contains("apple") || playerInput.Contains("banana") || playerInput.Contains("orange"))
-    {
-        Console.WriteLine("Challenge 2 completed.");
-        flag2 = true;
-    }
-    else
-    {
-        Console.WriteLine("You failed");
-    }
-
+    goto HousePerimeter;
+} else if (playerInput == 2) 
+{
+    goto HouseEntrance;
+}
+else // Input was an int, but not the right one
+{
+    goto ProgramEnd;
 }
 
-// Challenge 3
-if  (flag2 == true)
+// Scene 1_1 - House Perimeter ==========================================================================================================
+
+HousePerimeter:;
+Console.WriteLine(scene1_1Dialogue);
+playerInput = int.Parse(Console.ReadLine());
+
+if (playerInput == 1)
 {
-    // Print challenge
-    Console.WriteLine(rule1);
-    Console.WriteLine(rule2);
-    Console.WriteLine(rule3);
+    goto HouseEntrance;
+}
+else if (playerInput == 2)
+{
+    goto EndingRepentance;
+}
+else
+{
+    goto ProgramEnd;
+}
+// Scene 2 - House Entrance ==========================================================================================================
 
-    // Get player input
-    playerInput = Console.ReadLine();
+HouseEntrance:;
 
-    // Check against current rules (3)
-    if (playerInput.Contains("apple") || playerInput.Contains("banana") || playerInput.Contains("orange"))
+Console.WriteLine(scene2Dialogue);
+playerInput = int.Parse(Console.ReadLine());
+
+if (playerInput == 1) // Call intruder out (BAD)
+{
+    badDecisions += 1;
+    goto CallIntruderOut;
+
+}
+else if (playerInput == 2) // Open the door slowly
+{
+    Console.WriteLine(scene3Dialogue);
+    goto MainFloor;
+}
+else if (playerInput == 3) // Plant pot
+{
+    getEvidencePhotograph = true;
+    Console.WriteLine(evidencePhotographDialogue);
+    Console.ReadLine();
+    goto HouseEntrance;
+}
+else
+{
+    goto ProgramEnd;
+}
+
+// Scene 2.1 - Call the intruder to come out ==========================================================================================================
+CallIntruderOut:;
+
+Console.WriteLine(scene2_1Dialogue);
+playerInput = int.Parse(Console.ReadLine());
+
+if (playerInput == 1) // Kick open the door (BAD)
+{
+    badDecisions += 1;
+    Console.WriteLine(scene2_1_1Dialogue); // Play dialogue before checking bad ending
+    if (badDecisions >= 5)
     {
-        if (!playerInput.Contains('i') && !playerInput.Contains(I) && !playerInput.Contains('e') && !playerInput.Contains('E') && !playerInput.Contains('v') && !playerInput.Contains('V') && !playerInput.Contains('x') && !playerInput.Contains('X') && !playerInput.Contains('l') && !playerInput.Contains('L') && !playerInput.Contains('c') && !playerInput.Contains('C') && !playerInput.Contains('d') && !playerInput.Contains('D') && !playerInput.Contains('m') && !playerInput.Contains('M'))
-        {
-            Console.WriteLine("Yipee");
-        } else
-        {
-            Console.WriteLine("You failed");
-        }
+        goto EndingStomach;
     } else
     {
-        Console.WriteLine("You failed");
+        goto KickOpenDoor;
     }
 }
+else if (playerInput == 2) // Open the door slowly 
+{
+    Console.WriteLine(scene3Dialogue);
+    goto MainFloor;
+}
+else if (playerInput == 3) // Plant pot
+{
+    getEvidencePhotograph = true;
+    Console.WriteLine(evidencePhotographDialogue);
+    Console.ReadLine();
+    goto CallIntruderOut;
+}
+else
+{
+goto ProgramEnd;
+}
+
+// Scene 2.1.1 - Kick open the door ==========================================================================================================
+KickOpenDoor:;
+badDecisions += 1;
+
+Console.WriteLine(scene2_1_1Dialogue);
+Console.ReadLine();
+goto MainFloor;
+
+
+// Scene 3 - Main Floor ==========================================================================================================
+MainFloor:;
+Console.WriteLine(scene3Dialogue2);
+playerInput = int.Parse(Console.ReadLine());
+
+if (playerInput == 1) // Basement
+{
+
+}
+else if (playerInput == 2) // Bathroom
+{
+
+}
+else if (playerInput == 3) // Bedroom
+{
+
+}
+else if (playerInput == 4) // Leave
+{
+    if (getEvidencePhotograph && getEvidenceCrib && getEvidenceShrine) // The player leaves with all three evidence.
+    {
+        goto EndingRemorse;
+    }
+    else // The player tries to leave without all three evidence
+    {
+        Console.WriteLine("You can't leave yet. Not now.\n\n\nPress enter to continue:");
+        Console.ReadLine();
+        goto MainFloor;
+    }
+}
+else
+{
+    goto ProgramEnd;
+}
+
+// Scene ==========================================================================================================
+// Scene ==========================================================================================================
+// Scene ==========================================================================================================
+// Scene ==========================================================================================================
+// Scene ==========================================================================================================
+// Scene ==========================================================================================================
+// Scene ==========================================================================================================
+// Scene ==========================================================================================================
+
+
+
+// Endings
+Console.WriteLine("If you got here, something messed up in the code.");
+// Ending 1 - Stomach ==========================================================================================================
+
+EndingStomach:;
+Console.WriteLine(ending1Dialogue);
+Console.ReadLine();
+Console.WriteLine(ending1Dialogue2);
+Console.ReadLine();
+goto Credits;
+
+
+// Ending 2 - Repentance ==========================================================================================================
+
+EndingRepentance:;
+Console.WriteLine(ending2Dialogue);
+Console.ReadLine();
+goto Credits;
+
+// Ending 3 - Closet ==========================================================================================================
+
+EndingCloset:;
+Console.WriteLine(ending3Dialogue);
+Console.ReadLine();
+goto Credits;
+
+// Ending 4 - Remorse ==========================================================================================================
+
+EndingRemorse:;
+Console.WriteLine(ending4Dialogue);
+Console.ReadLine();
+goto Credits;
+// Ending 5 - Solitude ==========================================================================================================
+
+EndingSolitude:;
+Console.WriteLine(ending5Dialogue);
+Console.ReadLine();
+goto Credits;
+
+
+// Program ending
+ProgramEnd:;
+Console.WriteLine(errorMessage);
+
+// Credits
+Credits:;
+Console.WriteLine(credits);
+Console.ReadLine();
